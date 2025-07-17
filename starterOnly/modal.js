@@ -20,4 +20,12 @@ function launchModal() {
   modalbg.style.display = "block";
 }
 
+// Fermer la pop up avec un click sur la croix en selectionnant l'id de la croix
+const closePopupBtn = document.getElementById('closePopupBtn');
 
+// Ajouter événement pour fermer la pop-up
+if (closePopupBtn) { // Verifie si le bouton existe
+  closePopupBtn.addEventListener('click', () => { //condition : si il y a un click sur la croix
+    modalbg.style.display = "none"; // Ferme la pop-up
+  });
+}
