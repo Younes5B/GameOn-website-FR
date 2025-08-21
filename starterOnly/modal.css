@@ -226,6 +226,22 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
+
+.FirstNameErreur {
+  display: none;
+}
+
+.LastNameErreur {
+  display: none;
+}
+
+.EmailErreur {
+  display: none;
+}
+
+.Check-boxErreur {
+  display: none;
+}
 /* 
 input[data-error]::after {
     content: attr(data-error);
