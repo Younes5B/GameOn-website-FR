@@ -242,6 +242,23 @@ input {
 .Check-boxErreur {
   display: none;
 }
+
+.NombreErreur {
+  display: none;
+}
+
+.ConditionsErreur {
+  display: none;
+}
+
+.BirthdateErreur {
+  display: none;
+}
+
+.MessageConfirmationFormulaire {
+  display: none;
+}
+
 /* 
 input[data-error]::after {
     content: attr(data-error);
