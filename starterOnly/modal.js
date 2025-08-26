@@ -12,6 +12,7 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const formulaire = document.getElementById("formulaire");
+const FermezPopup = document.getElementById('FermezPopup');
 const FirstNameErreur = document.querySelector(".FirstNameErreur");
 const LastNameErreur = document.querySelector(".LastNameErreur");
 const EmailErreur = document.querySelector(".EmailErreur");
@@ -47,81 +48,106 @@ if (closePopupBtn) { // Verifie si le bouton existe
   });
 }
 
+//Fonction pour afficher une erreur
+function showError(element, messageElement) {
+  element.closest('.formData').setAttribute("data-error-visible", "true");
+  messageElement.style.display = "block";
+}
+
+//Fonction pour masquer une erreur
+function hideError(element, messageElement) {
+  element.closest('.formData').removeAttribute("data-error-visible");
+  messageElement.style.display = "none";
+}
+
 //Fonction qui permet de vérifier si le formulaire est bien remplis
 function validate() {
 
-  let FormulaireValide = true;//Verifie si les conditions sont remplis pour valider le formulaire
+  //Verifie si les conditions sont remplis pour valider le formulaire
+  let FormulaireValide = true;
 
-  //Si le prénom contient moin de deux caractères, afficher un message d'erreur
+  // Verifie que le Prénom contient minimum 2 lettres
   if (firstname.value.length < 2) {
-    FirstNameErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+    showError(firstname, FirstNameErreur);
+    FormulaireValide = false;
   } else {
-    FirstNameErreur.style.display = "none";//n'affiche pas de message d'erreur
+    hideError(firstname, FirstNameErreur);
   }
 
-  //Si le nom contient moin de deux caractères, afficher un message d'erreur
+  // Verifie que le Nom contient minimum 2 lettres
   if (lastname.value.length < 2) {
-    LastNameErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+    showError(lastname, LastNameErreur);
+    FormulaireValide = false;
   } else {
-    LastNameErreur.style.display = "none";//n'affiche pas de message d'erreur
+    hideError(lastname, LastNameErreur);
   }
 
-  //Pour que les entrées de l'email soit valides
+  // Verfiie que l'Email est valide
   if (!emailRegex.test(email.value)) {
-    EmailErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+    showError(email, EmailErreur);
+    FormulaireValide = false;
   } else {
-    EmailErreur.style.display = "none";//n'affiche pas de message d'erreur
+    hideError(email, EmailErreur);
   }
 
-  //Si aucune date de naissance n'est entrée, afficher un message d'erreur
-if (birthdate.value === "") {
-    BirthdateErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+  // Verifie que la Date de naissance est entrée
+  if (birthdate.value === "") {
+    showError(birthdate, BirthdateErreur);
+    FormulaireValide = false;
   } else {
-    BirthdateErreur.style.display = "none";//n'affiche pas de message d'erreur
+    hideError(birthdate, BirthdateErreur);
   }
 
-  //Si aucune ville n'est séléctionné, afficher un message d'erreur
-  let cityChecked = false;
-cities.forEach((city) => {//Vérifie qu'une ville est coché parmis la liste
-  if (city.checked) {
-    cityChecked = true;
-  }
-});
-
-if (!cityChecked) {//Si aucune ville n'est séléctionné, afficher un message d'erreur
-  CheckboxErreur.style.display = "block";
-  FormulaireValide = false;//Invalide le formulaire
-} else {
-  CheckboxErreur.style.display = "none";//n'affiche pas de message d'erreur
-}
-
-  //Si la quantité choisis est vide, inférieur à 0 ou supérieur à 99, afficher un message d'erreur
+  // Vérifie qu'un Nombre de tournois entre 0 et 99 est séléctionné
   if (quantity.value === "" || quantity.value < 0 || quantity.value > 99) {
-    NombreErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+    showError(quantity, NombreErreur);
+    FormulaireValide = false;
   } else {
-    NombreErreur.style.display = "none";//n'affiche pas de message d'erreur
+    hideError(quantity, NombreErreur);
   }
 
-  //Si la case "conditions d'utilisation" n'est pas coché, afficher un message d'erreur 
-   if (!checkbox1.checked) {
+  // Vérifie qu'au moins une Ville est séléctionné
+  let cityChecked = false;
+  const citiesFormData = document.querySelector('.formData input[name="location"]').closest('.formData');
+  cities.forEach((city) => {
+    if (city.checked) {
+      cityChecked = true;
+    }
+  });
+
+  if (!cityChecked) {
+    citiesFormData.setAttribute("data-error-visible", "true");
+    CheckboxErreur.style.display = "block";
+    FormulaireValide = false;
+  } else {
+    citiesFormData.removeAttribute("data-error-visible");
+    CheckboxErreur.style.display = "none";
+  }
+
+  // Vérifie que la case "Conditions d'utilisation" est bien cochée
+  const conditionsFormData = document.getElementById('checkbox1').closest('.formData');
+  if (!checkbox1.checked) {
+    conditionsFormData.setAttribute("data-error-visible", "true");
     ConditionsErreur.style.display = "block";
-    FormulaireValide = false;//Invalide le formulaire
+    FormulaireValide = false;
   } else {
-    ConditionsErreur.style.display = "none";//n'affiche pas de message d'erreur
+    conditionsFormData.removeAttribute("data-error-visible");
+    ConditionsErreur.style.display = "none";
   }
 
-  return FormulaireValide;//Retourne le resultat de la variable pour valider ou non le formulaire
+  return FormulaireValide;
 }
 
 //Pour pouvoir fermer la pop-up, stopper le comportement natif qui est de recharger la page
 formulaire.addEventListener('submit', (e) => {
   e.preventDefault()
-   if (validate()) {
+
+  //Fermez la popup une fois le formulaire validé avec le bouton "fermez"
+  FermezPopup.addEventListener('click', () => {
+    modalbg.style.display = "none";
+  });
+
+  if (validate()) {
     // Si la validation est réussit, afficher le message de confirmation
     formulaire.style.display = "none";//Cache le formulaire
     MessageConfirmationFormulaire.style.display = "block";//Affiche le message de validation du formulaire
