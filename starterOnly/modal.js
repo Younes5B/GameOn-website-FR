@@ -43,7 +43,7 @@ const closePopupBtn = document.getElementById('closePopupBtn');
 
 // Ajouter événement pour fermer la pop-up
 if (closePopupBtn) { // Verifie si le bouton existe
-  closePopupBtn.addEventListener('click', () => { //condition : si il y a un click sur la croix
+  closePopupBtn.addEventListener('click', () => { //Condition : si il y a un click sur la croix
     modalbg.style.display = "none"; // Ferme la pop-up
   });
 }
@@ -142,14 +142,23 @@ function validate() {
 formulaire.addEventListener('submit', (e) => {
   e.preventDefault()
 
-  //Fermez la popup une fois le formulaire validé avec le bouton "fermez"
-  FermezPopup.addEventListener('click', () => {
-    modalbg.style.display = "none";
-  });
-
   if (validate()) {
     // Si la validation est réussit, afficher le message de confirmation
     formulaire.style.display = "none";//Cache le formulaire
     MessageConfirmationFormulaire.style.display = "block";//Affiche le message de validation du formulaire
+
+    //Réinitialise le formulaire
+    FermezPopup.addEventListener('click', () => {
+      formulaire.reset();
+
+      //Cache le message de confirmation
+      MessageConfirmationFormulaire.style.display = "none";
+
+      //Affiche uen nouvelle fois le formulaire
+      formulaire.style.display = "block";
+
+      //Ferme le formulaire
+      modalbg.style.display = "none";
+    });
   }
 })
